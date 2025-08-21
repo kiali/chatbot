@@ -1,6 +1,12 @@
 name: Publish to npm on merge
 
 on:
+  workflow_dispatch:
+    inputs:
+      forcePublish:
+        description: 'Force publish even if version matches npm'
+        required: false
+        default: 'false'
   push:
     branches: [ main ]
     paths:
@@ -41,7 +47,9 @@ jobs:
           echo "name=$NAME" >> $GITHUB_OUTPUT
           echo "local_version=$LOCAL_VER" >> $GITHUB_OUTPUT
           echo "published_version=$PUBLISHED_VER" >> $GITHUB_OUTPUT
-          if [ "$PUBLISHED_VER" = "none" ] || [ "$LOCAL_VER" != "$PUBLISHED_VER" ]; then
+          if [ "${{ github.event.inputs.forcePublish }}" = "true" ]; then
+            echo "publish=true" >> $GITHUB_OUTPUT
+          elif [ "$PUBLISHED_VER" = "none" ] || [ "$LOCAL_VER" != "$PUBLISHED_VER" ]; then
             echo "publish=true" >> $GITHUB_OUTPUT
           else
             echo "publish=false" >> $GITHUB_OUTPUT
