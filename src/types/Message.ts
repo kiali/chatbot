@@ -31,7 +31,7 @@ export type ReferencedDocument = {
   title: string;
 };
 
-export type ExtendedMessage = MessageProps & {
+export type ExtendedMessage = Omit<MessageProps, 'ref'> & {
   referenced_documents: ReferencedDocument[];
   scrollToHere?: boolean;
   collapse?: boolean;
