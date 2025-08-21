@@ -13,6 +13,8 @@ yarn start
 
 This launches the demo at `http://localhost:3000`.
 
+Back to the library overview: see the root [README.md](../README.md).
+
 ## What this demo contains
 
 - `src/KialiMockUp/`: a small PF5 mock-up of Kiali (header, sidebar, Overview and Graph pages, light/dark switch).
@@ -40,5 +42,6 @@ Graph:
 Graph (dark mode):
 
 ![Graph – dark mode](./images/graph_dark_mode.png)
+
 
 

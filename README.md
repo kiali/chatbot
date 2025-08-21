@@ -22,7 +22,7 @@ yarn build
 ```
 The dev app links the library via `@kiali/chatbot: link:../`, so rerun `yarn build` at the root after edits to see updates reflected in the running dev app.
 
-- See more details in `dev/README.md`.
+- See more details in [dev/README.md](dev/README.md).
 
 ### Integration files and data flow
 - **`src/components/KialiChatBot/KialiChatBot.tsx`**
@@ -44,6 +44,16 @@ In the PF5 demo (`dev/`), the files `src/Chatbot.tsx` and `src/ChatbotWindow.tsx
 yarn build
 ```
 Outputs `dist/` with bundles and type declarations per `rollup.config.js` and `tsconfig.json`.
+
+### Screenshots
+
+Graph:
+
+![Graph](dev/images/graph.png)
+
+Graph (dark mode):
+
+![Graph – dark mode](dev/images/graph_dark_mode.png)
 
 ### License
 Apache-2.0
