@@ -1,0 +1,63 @@
+name: Publish to npm on merge
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'package.json'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@kiali'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build package
+        run: yarn build
+
+      - name: Determine publish necessity
+        id: vars
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          LOCAL_VER=$(node -p "require('./package.json').version")
+          PUBLISHED_VER=$(npm view "$NAME" version || echo "none")
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+          echo "local_version=$LOCAL_VER" >> $GITHUB_OUTPUT
+          echo "published_version=$PUBLISHED_VER" >> $GITHUB_OUTPUT
+          if [ "$PUBLISHED_VER" = "none" ] || [ "$LOCAL_VER" != "$PUBLISHED_VER" ]; then
+            echo "publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "publish=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to npm
+        if: steps.vars.outputs.publish == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+
+      - name: Skip publish (version unchanged)
+        if: steps.vars.outputs.publish != 'true'
+        run: echo "Skipping publish. Local version ($LOCAL) matches npm ($REMOTE)."
+        env:
+          LOCAL: ${{ steps.vars.outputs.local_version }}
+          REMOTE: ${{ steps.vars.outputs.published_version }}
+
+

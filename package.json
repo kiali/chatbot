@@ -1,0 +1,57 @@
+{
+  "name": "@kiali/chatbot",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/types/index.d.ts",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "cd dev && yarn start",
+    "build": "rollup -c"
+  },
+  "dependencies": {
+    "@patternfly/chatbot": "^2.2.1",
+    "@patternfly/patternfly": "^6.2.3",
+    "@patternfly/react-table": "^6.1.0",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "axios": "^1.8.3",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "typestyle": "^2.4.0"
+  },
+  "peerDependencies": {
+    "framer-motion": "6",
+    "react": "^17",
+    "react-dom": "^17"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.3",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-json": "^6.1.0",
+    "@types/react": "^17.0.1",
+    "postcss": "^8.5.3",
+    "rollup": "^4.41.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-url": "^3.0.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "resolutions": {
+    "framer-motion": "6.5.1"
+  }
+}
