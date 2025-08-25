@@ -6,7 +6,7 @@ import { MessageProps } from "@patternfly/chatbot";
 //import userLogo from "../assets/img/user_logo.png";
 import userLogo from "../assets/img/avatar.svg";
 import logo from "../assets/img/kiali-IconLogo-Color.svg";
-import { ModelAI } from "../types";
+import { Credentials, ModelAI } from "../types";
 
 const botName =
   document.getElementById("bot_name")?.innerText ??
@@ -124,6 +124,7 @@ export const useChatbot = (models: ModelAI[], userName: string) => {
                 buildUrl(selectedModel.endpoint,'/chat'),
                 chatRequest,
                 {
+                    auth: selectedModel.credentials,
                     headers: {
                         "Content-Type": "application/json"
                     },

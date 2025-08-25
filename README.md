@@ -5,6 +5,8 @@ An AI-powered chatbot component for Kiali. The UI is built with PatternFly 6, wh
 - The reusable PF6 chatbot library (root `src/`, built with Rollup)
 - A PF5 demo app under `dev/` to validate embedding the PF6 chatbot inside a PF5 application
 
+Published on npm: [@kiali/chatbot](https://www.npmjs.com/package/@kiali/chatbot)
+
 ### Why PF6 inside a PF5 app?
 Kiali uses PF5 today, but the chatbot leverages PF6 components. To embed the chatbot in Kiali, we isolate and wrap the PF6 UI so it can run inside a PF5 application without conflicts. The `dev/` app demonstrates the exact integration approach you can mirror in Kiali.
 
@@ -49,11 +51,11 @@ Outputs `dist/` with bundles and type declarations per `rollup.config.js` and `t
 
 Graph:
 
-![Graph](dev/images/graph.png)
+![Graph](https://github.com/kiali/chatbot/blob/main/dev/images/graph.png?raw=true)
 
 Graph (dark mode):
 
-![Graph – dark mode](dev/images/graph_dark_mode.png)
+![Graph – dark mode](https://github.com/kiali/chatbot/blob/main/dev/images/graph_dark_mode.png?raw=true)
 
 ### License
 Apache-2.0

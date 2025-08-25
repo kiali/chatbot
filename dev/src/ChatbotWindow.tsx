@@ -42,7 +42,7 @@ export const ChatbotWindow: React.FC<ChatbotWProps> = (props: ChatbotWProps) => 
         display: 'block' // Can help with accurate width measurement
       }}
     >
-      <KialiChatBot {...props} debug={true} models={[{"endpoint": "http://localhost:8080", model: "Kiali"}, {"endpoint": "http://gemma:8080", model: "Gemma"}]}/>
-    </div>
+      <KialiChatBot {...props} debug={true} models={[{"endpoint": "http://localhost:8080", model: "Kiali", credentials: {username: "admin", password: "admin"}}, {"endpoint": "http://gemma:8080", model: "Gemma", credentials: {username: "admin", password: "admin"}}]}/>
+    </div>  
   );
 };

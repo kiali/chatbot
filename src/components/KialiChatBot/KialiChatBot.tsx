@@ -112,6 +112,7 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
     conversationId,
     setConversationId    
   } = useChatbot(context.models, context.username || "User");
+  
     const [chatbotVisible, setChatbotVisible] = useState<boolean>(false);
     const [displayMode, setDisplayMode] = useState<ChatbotDisplayMode>(
         ChatbotDisplayMode.default,
