@@ -59,3 +59,17 @@ Graph (dark mode):
 
 ### License
 Apache-2.0
+
+
+### Next steps
+
+Improve messages:
+
+- https://www.patternfly.org/patternfly-ai/chatbot/messages#custom-message-content
+- https://www.patternfly.org/patternfly-ai/chatbot/messages#messages-with-quick-responses
+
+Pending to improve:
+
+- https://github.com/patternfly/chatbot/issues/659
+- https://github.com/patternfly/chatbot/issues/629
+- https://github.com/patternfly/chatbot/issues/658

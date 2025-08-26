@@ -4,6 +4,9 @@ export const CHAT_HISTORY_HEADER = "Chat History";
 
 export const API_TIMEOUT = 280000;
 
+export const REFERENCED_DOCUMENTS_CAPTION =
+  "Refer to the following for more information:";
+  
 /* Timeout message */
 export const TIMEOUT_MSG =
   "_Chatbot service is taking too long to respond to your query. " +
@@ -32,3 +35,4 @@ export const INITIAL_NOTICE: AlertMessage = {
     ` is not utilized to enhance our products and services. `,
   variant: "info",
 };
+

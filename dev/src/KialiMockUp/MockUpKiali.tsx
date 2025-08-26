@@ -25,6 +25,7 @@ import { ChatbotAI } from '../Chatbot';
 import { ThemeSwitchComponent } from './ThemeSwitch';
 import { Overview } from './Overview';
 import { GraphView as Graph } from './Graph';
+import { dataContext } from './DataContext';
 
 export const MASTHEAD_HEIGHT = '76px';
 
@@ -84,7 +85,7 @@ return (
     >
             <PageSection isFilled>
               {activeMenu === 'Overview' ? <Overview/> : <Graph/>}
-              <ChatbotAI username={"Kiali User"} theme={theme}/>
+              <ChatbotAI username={"Kiali User"} theme={theme} view={activeMenu} context={activeMenu === 'Overview' ? dataContext.Overview : dataContext.Graph}/>
             </PageSection>
     </Page>
 )

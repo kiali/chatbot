@@ -13,6 +13,8 @@ const MAX_IFRAME_VIEWPORT_HEIGHT_PERCENT = 0.95; // Max 95% of screen height
 type ChatbotProps = {
   username: string;
   theme: string;
+  view?: string;
+  context?: any;
 };
 
 export const ChatbotAI: React.FC<ChatbotProps> = (props: ChatbotProps) => {
@@ -113,7 +115,7 @@ export const ChatbotAI: React.FC<ChatbotProps> = (props: ChatbotProps) => {
       >
         {chatbotFrameRef.current !== null &&
           ReactDOM.createPortal(
-            <ChatbotWindow username={props.username} theme={props.theme} onDisplayChange={adjustDisplay}/>,
+            <ChatbotWindow username={props.username} theme={props.theme} onDisplayChange={adjustDisplay} view={props.view} context={props.context}/>,
             // @ts-expect-error IFrame for chatbot must exist
             chatbotFrameRef.current?.contentWindow.document.body
           )}

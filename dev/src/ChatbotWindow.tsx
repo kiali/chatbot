@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { ChatbotDisplayMode, KialiChatBot } from '@kiali/chatbot';
-
+import { ChatbotDisplayMode, KialiChatBot, Prompt } from '@kiali/chatbot';
+import { DataPrompts } from './DataPrompts';
 export const PF6_THEME_CLASS_LIGHT = 'pf-v6-theme-light';
 export const PF6_THEME_CLASS_DARK = 'pf-v6-theme-dark';
 
@@ -8,12 +8,21 @@ type ChatbotWProps = {
   username: string;
   theme: string;
   onDisplayChange?: (display: ChatbotDisplayMode) => void;
+  view?: string;
+  context?: any;
 };
 
 export const ChatbotWindow: React.FC<ChatbotWProps> = (props: ChatbotWProps) => {
   const getFrameWindow = () => window[0];
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const models = [
+    { endpoint: "https://<server>/", 
+      model: "Kiali", 
+      credentials: {username: "<user>", password: "<password>"}
+    }, 
+    {endpoint: "http://gemma:8080", model: "Gemma", credentials: {username: "admin", password: "admin"}}
+  ];
   useEffect(
     function () {
       const them = props.theme;
@@ -34,6 +43,16 @@ export const ChatbotWindow: React.FC<ChatbotWProps> = (props: ChatbotWProps) => 
     [props.theme]
   );
 
+
+  const handlePromptClick = (prompt: Prompt) => {
+    console.log("handlePromptClick", prompt.title);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({});
+      }, 1000);
+    });
+  }
+
   return (
     <div
       ref={contentRef}
@@ -42,7 +61,7 @@ export const ChatbotWindow: React.FC<ChatbotWProps> = (props: ChatbotWProps) => 
         display: 'block' // Can help with accurate width measurement
       }}
     >
-      <KialiChatBot {...props} debug={true} models={[{"endpoint": "http://localhost:8080", model: "Kiali", credentials: {username: "admin", password: "admin"}}, {"endpoint": "http://gemma:8080", model: "Gemma", credentials: {username: "admin", password: "admin"}}]}/>
+      <KialiChatBot {...props} debug={true} models={models} prompts={DataPrompts[props.view || "overview"]}/>
     </div>  
   );
 };

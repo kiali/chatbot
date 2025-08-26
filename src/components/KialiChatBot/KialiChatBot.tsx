@@ -5,10 +5,10 @@ import { Chatbot, ChatbotAlert, ChatbotContent, ChatbotConversationHistoryNav, C
     ChatbotFootnoteProps,
      ChatbotHeader, ChatbotHeaderActions, ChatbotHeaderMain, ChatbotHeaderMenu, ChatbotHeaderOptionsDropdown, ChatbotHeaderSelectorDropdown, ChatbotHeaderTitle, ChatbotToggle, ChatbotWelcomePrompt, Conversation, Message, MessageBar, MessageBox, 
      MessageProps} from "@patternfly/chatbot";
-import { Bullseye, Brand, DropdownList, DropdownItem, DropdownGroup, Title, ExpandableSection } from '@patternfly/react-core';
+import { Bullseye, Brand, DropdownList, DropdownItem, DropdownGroup, Title, ExpandableSection, Stack, StackItem, Button} from '@patternfly/react-core';
 import "./KialiChatBot.css";
-import { CHAT_HISTORY_HEADER, FOOTNOTE_LABEL } from "../../Constants";
-import {ExpandIcon, OpenDrawerRightIcon, OutlinedWindowRestoreIcon, TimesIcon} from '@patternfly/react-icons';
+import { CHAT_HISTORY_HEADER, FOOTNOTE_LABEL, REFERENCED_DOCUMENTS_CAPTION } from "../../Constants";
+import {ExpandIcon, OpenDrawerRightIcon, OutlinedWindowRestoreIcon, SearchIcon, TimesIcon} from '@patternfly/react-icons';
 
 /** Logos */
 
@@ -19,7 +19,8 @@ import KialiIconLogoDark from '../../assets/img/kiali-Icon-Dark.svg';
 import { useChatbot } from "../../useChatbot/useChatbot";
 import { style } from "typestyle";
 import { ModelAI } from "../../types/Models";
-import { ExtendedMessage } from "../../types";
+import { ExtendedMessage, Prompt } from "../../types";
+import { ReferencedDocuments } from "../ReferencedDocuments/ReferencedDocuments";
 export { ChatbotDisplayMode };
 
 export interface ChatbotContext {
@@ -27,6 +28,9 @@ export interface ChatbotContext {
   onDisplayChange?: (display: ChatbotDisplayMode) => void;
   debug?: boolean;
   models: ModelAI[];
+  view?: string;
+  context?: any;
+  prompts?: Prompt[];
 }
 
 const conversationList: { [key: string]: Conversation[] } = {};
@@ -112,7 +116,13 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
     conversationId,
     setConversationId    
   } = useChatbot(context.models, context.username || "User");
-  
+
+    const welcomePrompts = context.prompts?.map((prompt) => ({
+        title: prompt.title,
+        message: prompt.message,
+        onClick: () => handleSend(prompt.params || "", prompt.tool),
+    }));
+
     const [chatbotVisible, setChatbotVisible] = useState<boolean>(false);
     const [displayMode, setDisplayMode] = useState<ChatbotDisplayMode>(
         ChatbotDisplayMode.default,
@@ -135,7 +145,7 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
-
+    
     useEffect(
         () =>
         // Fired on component mount (componentDidMount)
@@ -324,6 +334,7 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
                                     <ChatbotWelcomePrompt
                                         title={"Hello " + context?.username}
                                         description="How may I help you today?"
+                                        prompts={welcomePrompts}
                                     />
                                      {alertMessage && (
                                         <ChatbotAlert
@@ -335,7 +346,7 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
                                         >
                                         {alertMessage.message}
                                         </ChatbotAlert>
-                                    )}
+                                    )}                                   
                                     {(conversationId &&
                                        setCurrentConversation(conversationId, messages)) || <></>}
                                        {messages.map(
@@ -359,12 +370,13 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
                                                     <div key={`m_div_${index}`}>
                                                         <ExpandableSection toggleText="Show more">
                                                             <Message key={`m_msg_${index}`} {...message} isLoading={isLoading && !message.content}/>                                                            
-                                                        </ExpandableSection>
-                                                        
+                                                            <ReferencedDocuments key={`m_docs_${index}`} referenced_documents={referenced_documents} caption={REFERENCED_DOCUMENTS_CAPTION} />
+                                                        </ExpandableSection>                                                        
                                                     </div>
                                                 ): (
                                                      <div key={`m_div_${index}`}>
                                                         <Message key={`m_msg_${index}`} {...message} />
+                                                        <ReferencedDocuments key={`m_docs_${index}`} referenced_documents={referenced_documents} caption={REFERENCED_DOCUMENTS_CAPTION} />                                                        
                                                     </div>
                                                 )}
                                                 </div>
@@ -382,6 +394,7 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
                             </ChatbotContent>
                             <ChatbotFooter>
                                 <MessageBar 
+                                    onFocus={() => setAlertMessage(undefined)}
                                     onSendMessage={handleSend}
                                     className={messageBar}
                                     alwayShowSendButton
