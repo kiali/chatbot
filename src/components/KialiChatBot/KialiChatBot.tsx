@@ -118,7 +118,7 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
     const welcomePrompts = context.prompts?.map((prompt) => ({
         title: prompt.title,
         message: prompt.message,
-        onClick: () => handleSend(prompt.query, context.context),
+        onClick: () => handleSend(prompt.query, context.context, prompt.title),
     }));
 
     const [chatbotVisible, setChatbotVisible] = useState<boolean>(false);
