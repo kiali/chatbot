@@ -4,14 +4,14 @@ export const DataPrompts : {[key: string]: Prompt[] } = {
         {
             title: "Check Graph Status",
             message: "Show me the current status of my service mesh graph",
-            tool: "graph"
+            query: "Check my graph"
         }
     ],
     "Overview": [
         {
             title: "Analyze Overview",
             message: "Give me a summary of the overall health of my mesh from the overview page",
-            tool: "chat"
+            query: "Check my overview"
         }
     ]
 }

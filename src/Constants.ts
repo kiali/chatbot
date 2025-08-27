@@ -4,6 +4,11 @@ export const CHAT_HISTORY_HEADER = "Chat History";
 
 export const API_TIMEOUT = 280000;
 
+export const API_VERSION = "v1";
+export const API_CHAT = "chat";
+
+export const API_PATH = `${API_VERSION}/${API_CHAT}`;
+
 export const REFERENCED_DOCUMENTS_CAPTION =
   "Refer to the following for more information:";
   

@@ -40,11 +40,8 @@ export type ExtendedMessage = Omit<MessageProps, 'ref'> & {
   collapse?: boolean;
 };
 
-export type ToolName = "default" | "chat" | "graph";
-
 export type Prompt = {
   title: string;
   message: string;
-  params?:string;
-  tool: ToolName;
+  query: string;
 };

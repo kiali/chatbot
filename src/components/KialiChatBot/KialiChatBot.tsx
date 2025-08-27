@@ -4,7 +4,7 @@ import { Chatbot, ChatbotAlert, ChatbotContent, ChatbotConversationHistoryNav, C
     ChatbotFootnote,
     ChatbotFootnoteProps,
      ChatbotHeader, ChatbotHeaderActions, ChatbotHeaderMain, ChatbotHeaderMenu, ChatbotHeaderOptionsDropdown, ChatbotHeaderSelectorDropdown, ChatbotHeaderTitle, ChatbotToggle, ChatbotWelcomePrompt, Conversation, Message, MessageBar, MessageBox, 
-     MessageProps} from "@patternfly/chatbot";
+     } from "@patternfly/chatbot";
 import { Bullseye, Brand, DropdownList, DropdownItem, DropdownGroup, Title, ExpandableSection, Stack, StackItem, Button} from '@patternfly/react-core';
 import "./KialiChatBot.css";
 import { CHAT_HISTORY_HEADER, FOOTNOTE_LABEL, REFERENCED_DOCUMENTS_CAPTION } from "../../Constants";
@@ -27,7 +27,7 @@ export interface ChatbotContext {
   username?: string | undefined;
   onDisplayChange?: (display: ChatbotDisplayMode) => void;
   debug?: boolean;
-  models: ModelAI[];
+  model: ModelAI;
   view?: string;
   context?: any;
   prompts?: Prompt[];
@@ -111,16 +111,14 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
     handleSend,
     alertMessage, 
     setAlertMessage,
-    selectedModel,
-    setSelectedModel,
     conversationId,
     setConversationId    
-  } = useChatbot(context.models, context.username || "User");
+  } = useChatbot(context.model, context.username || "User");
 
     const welcomePrompts = context.prompts?.map((prompt) => ({
         title: prompt.title,
         message: prompt.message,
-        onClick: () => handleSend(prompt.params || "", prompt.tool),
+        onClick: () => handleSend(prompt.query, context.context),
     }));
 
     const [chatbotVisible, setChatbotVisible] = useState<boolean>(false);
@@ -208,13 +206,6 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
     }
   };
 
-  const onSelectModel = (
-    _event: React.MouseEvent<Element, MouseEvent> | undefined,
-    value: string | number | undefined,
-  ) => {
-    setSelectedModel(context.models.filter(m => m.model === (value as string))[0]);
-  };
-
     return (
         <div ref={ref}>
             <ChatbotToggle
@@ -273,23 +264,7 @@ export const KialiChatBot: React.FunctionComponent<ChatbotContext> = (
                                         showOnDefault={iconLogo}
                                     />
                                 </ChatbotHeaderMain>
-                                <ChatbotHeaderActions>
-                                    {context.debug && (
-                                        <ChatbotHeaderSelectorDropdown
-                                            tooltipProps={{content: '', className: style({visibility: "hidden"})}}
-                                            value={selectedModel.model}
-                                            onSelect={onSelectModel}
-                                            >
-                                                <DropdownList>
-                                                    {context.models.map((m) => (
-                                                        <DropdownItem value={m.model} key={m.model}>
-                                                            {m.model}
-                                                        </DropdownItem>
-                                                    ))}
-                                                </DropdownList>
-
-                                        </ChatbotHeaderSelectorDropdown>
-                                    )}
+                                <ChatbotHeaderActions>                                    
                                     <ChatbotHeaderOptionsDropdown onSelect={onSelectDisplayMode} tooltipProps={{content: '', className: style({visibility: "hidden"})}}>
                                         <DropdownGroup label="Display mode">
                                             <DropdownList>

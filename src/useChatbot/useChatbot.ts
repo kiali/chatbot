@@ -1,13 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { AlertMessage, ChatRequest, ChatResponse, ExtendedMessage, ToolName } from "../types/Message";
-import { API_TIMEOUT, INITIAL_NOTICE, KIALI_PRODUCT_NAME, TIMEOUT_MSG, TOO_MANY_REQUESTS_MSG } from "../Constants";
-import { MessageProps } from "@patternfly/chatbot";
-//import userLogo from "../assets/img/user_logo.png";
+import { AlertMessage, ChatRequest, ChatResponse, ExtendedMessage } from "../types/Message";
+import { API_PATH, API_TIMEOUT, INITIAL_NOTICE, KIALI_PRODUCT_NAME, TIMEOUT_MSG, TOO_MANY_REQUESTS_MSG } from "../Constants";
 import userLogo from "../assets/img/avatar.svg";
 import logo from "../assets/img/kiali-IconLogo-Color.svg";
-import { Credentials, ModelAI } from "../types";
-import { Endpoints } from "../types/Endpoints";
+import { ModelAI } from "../types";
 
 const botName =
   document.getElementById("bot_name")?.innerText ??
@@ -46,23 +43,11 @@ const buildUrl = (host: string, path: string): string => {
   return `${trimmedHost}/${trimmedPath}`;
 }
 
-const resolveEndpointPath = (tool: ToolName): string => {
-  switch (tool) {
-    case "chat":
-      return Endpoints.CHAT;
-    case "graph":
-      return Endpoints.GRAPH;
-    default:
-      return Endpoints.CHAT;
-  }
-}
-
 const escapeHtml = (unsafe: string): string =>
   unsafe
     .replace(/`/g, "*");
 
-export const useChatbot = (models: ModelAI[], userName: string) => {
-    const [selectedModel, setSelectedModel] = useState(models[0]);
+export const useChatbot = (model: ModelAI, userName: string) => {
     const [messages, setMessages] = useState<ExtendedMessage[]>([]);    
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<AlertMessage | undefined>(
@@ -128,7 +113,7 @@ export const useChatbot = (models: ModelAI[], userName: string) => {
         return `${Date.now().toString(16)}-${random()}-${random()}`;
     };
 
-    const handleSend = async (query: string | number, tool: ToolName = "default", context?: any, dev?: boolean) => {
+    const handleSend = async (query: string | number, context?: any, dev?: boolean) => {
         const userMessage: ExtendedMessage = {
             role: "user",
             content: query.toString(),
@@ -151,7 +136,7 @@ export const useChatbot = (models: ModelAI[], userName: string) => {
 
         const chatRequest: ChatRequest = {
             conversation_id: nextConversationId,
-            query: tool === "default" ? query.toString() : '',
+            query: query.toString(),
             context: ctxString
         };
         setIsLoading(true);
@@ -216,15 +201,12 @@ export const useChatbot = (models: ModelAI[], userName: string) => {
                 newBotMessage.referenced_documents = referenced_documents;
                 addMessage(newBotMessage);
             } else { 
-                const endpointBase = buildUrl(selectedModel.endpoint, resolveEndpointPath(tool));
-                const url = tool === "graph" && typeof query === "string" && query.trim().length > 0
-                    ? `${endpointBase}${endpointBase.includes("?") ? "&" : "?"}${query.replace(/^[?&]+/, "")}`
-                    : endpointBase;
+                const url = buildUrl(model.endpoint,API_PATH);
                 const resp = await axios.post(
                     url,
                     chatRequest,
                     {
-                        auth: selectedModel.credentials,
+                        auth: model.credentials,
                         headers: {
                             "Content-Type": "application/json"
                         },
@@ -275,8 +257,6 @@ export const useChatbot = (models: ModelAI[], userName: string) => {
         handleSend,
         alertMessage,
         setAlertMessage,
-        selectedModel,
-        setSelectedModel,
         conversationId,
         setConversationId
     }
